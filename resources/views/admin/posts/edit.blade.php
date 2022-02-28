@@ -40,7 +40,7 @@
                             {{-- Se ci sono errori di validazione, decido se mettere checked o meno in base a old() --}}
                             <input {{ in_array($tag->id, old('tags', [])) ? 'checked' : '' }} class="form-check-input" type="checkbox" name="tags[]" value="{{ $tag->id }}" id="tag-{{ $tag->id }}">
                         @else
-                            {{-- Atrimenti se non ci sono errori di validazione, decido se mettere checked o meno in base a $post->tags->contains --}}
+                            {{-- Se non ci sono errori di validazione, decido se mettere checked o meno in base a $post->tags->contains --}}
                             <input {{ $post->tags->contains($tag) ? 'checked' : '' }} class="form-check-input" type="checkbox" name="tags[]" value="{{ $tag->id }}" id="tag-{{ $tag->id }}">
                         @endif
 
