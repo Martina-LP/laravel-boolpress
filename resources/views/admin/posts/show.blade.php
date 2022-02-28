@@ -6,6 +6,10 @@
 
         <div class="mb-2" style="font-weight: 600;">Slug: {{ $post->slug }}</div>
 
+        @if ($post->category)
+            <div class="mb-2" style="font-weight: 600;">Category: {{ $post->category ? $post->category->name : 'none' }}</div>
+        @endif
+
         <p>{{ $post->content }}</p>
 
         <div>

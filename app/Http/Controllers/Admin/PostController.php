@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
+use App\Category;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -32,6 +33,13 @@ class PostController extends Controller
      */
     public function create()
     {
+        $categories = Category::all();
+
+        $data = [
+            'categories' => $categories
+
+        ];
+
         return view('admin.posts.create');
     }
 
@@ -83,9 +91,11 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = Post::findOrFail($id);
+        $categories = Category::all();
 
         $data = [
-            'post' => $post
+            'post' => $post,
+            'categories' => $categories
         ];
 
         return view('admin.posts.edit', $data);
@@ -133,23 +143,9 @@ class PostController extends Controller
     protected function getValidationRules() {
         return [
             'title' => 'required|max:255',
-            'content' => 'required|max:50000'
+            'content' => 'required|max:50000',
+            'category_id' => 'exists:categories,id|nullable'
         ];
     }
 
-    protected function getUniqueSlugTitle($title) {
-        $slug = Str::slug($title);
-        $slug_base = $slug;
-
-        $post_found = Post::where('slug', '=', $slug)->first();
-        $counter = 1;
-
-        while($post_found) {
-            $slug = $slug_base .= '-' . $counter;
-            $post_found = Post::where('slug', '=', $slug)->first();
-            $counter++;
-        }
-
-        return $slug;
-    }
 }
