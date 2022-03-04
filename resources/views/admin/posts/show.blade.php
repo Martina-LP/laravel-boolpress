@@ -6,9 +6,15 @@
 
         <div class="mb-2" style="font-weight: 600;">Slug: {{ $post->slug }}</div>
 
-        @if ($post->category)
-            <div class="mb-2" style="font-weight: 600;">Category: {{ $post->category ? $post->category->name : 'none' }}</div>
-        @endif
+        <div class="mb-2"><strong>Category:</strong> {{ $post->category ? $post->category->name : 'none' }}</div>
+
+        <div class="mb-2"><strong>Tags:</strong>
+            @forelse ($post->tags as $tag)
+                {{ $tag->name }}{{ $loop->last ? '' : ', ' }}
+            @empty
+                none
+            @endforelse
+        </div>
 
         <p>{{ $post->content }}</p>
 
