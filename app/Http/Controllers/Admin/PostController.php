@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
 use App\Category;
+use App\Tag;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -34,9 +35,11 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $tags = Tag::all();
 
         $data = [
-            'categories' => $categories
+            'categories' => $categories,
+            'tags' => $tags
 
         ];
 
@@ -58,9 +61,13 @@ class PostController extends Controller
         $new_post = new Post();
         $new_post->fill($form_data);
 
-        $new_post->slug = $this->getUniqueSlugTitle($form_data['title']);
+        $new_post->slug = Post::getUniqueSlugTitle($form_data['title']);
 
         $new_post->save();
+
+        if(isset($form_data['tags'])) {
+            $new_post->tags()->sync($form_data['tags']);
+        }
 
         return redirect()->route('admin.posts.show', ['post' => $new_post->id]);
     }
