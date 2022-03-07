@@ -16,6 +16,14 @@
             @endforelse
         </div>
 
+        {{-- @if($post->tags->isNotEmpty())
+            <div class="mb-2"><strong>Tags:</strong>
+                @foreach ($post->tags as $tag)
+                    {{ $tag->name }}{{ $loop->last ? '' : ', ' }}
+                @endforeach
+            </div>
+        @endif --}}
+
         <p>{{ $post->content }}</p>
 
         <div>
