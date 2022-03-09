@@ -19,6 +19,24 @@
                     </div>
                 </div>
             </div>
+            <nav>
+                <ul class="pagination">
+                    <!-- Previous link -->
+                    <li class="page-item" :class="{ 'disabled': currentPage == 1 }">
+                        <a @click="getPosts(currentPage - 1)" class="page-link" href="#">Previous</a>
+                    </li>
+
+                    <!-- Pages link -->
+                    <li v-for="n in lastPage" :key="n" class="page-item" :class="{ 'active': currentPage == n }">
+                        <a @click="getPosts(n)" class="page-link" href="#">{{ n }}</a>
+                    </li>
+
+                    <!-- Next link -->
+                    <li class="page-item" :class="{ 'disabled': currentPage == lastPage }">
+                        <a @click="getPosts(currentPage + 1)" class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </section>
 </template>
@@ -28,15 +46,23 @@ export default {
     name: 'Posts',
     data: function() {
         return {
-            posts: []
+            posts: [],
+            currentPage: 1,
+            lastPage: false
         };
     },
 
     methods: {
-        getPosts: function() {
-            axios.get('http://127.0.0.1:8000/api/posts')
+        getPosts: function(pageNumber) {
+            axios.get('http://127.0.0.1:8000/api/posts', {
+                params: {
+                    page: pageNumber
+                }
+            })
             .then((response) => {
-                this.posts = response.data.results;
+                this.posts = response.data.results.data;
+                this.currentPage = response.data.results.current_page;
+                this.lastPage = response.data.results.last_page;
             });
         },
 
@@ -50,7 +76,7 @@ export default {
     },
 
     created: function() {
-        this.getPosts();
+        this.getPosts(1);
     }
 }
 </script>
